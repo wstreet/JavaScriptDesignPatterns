@@ -74,18 +74,55 @@ saleOffices.trigger('squarMeter100', 20000)
 
 
 
+/***
+*  通用方法的例子：网站登陆
+*  描述：有需要用到用户信息的模块在用户登陆成功之后收到发布的信息
+*/
+
+
+const login = {}
+installEvent(login);
+
+ajax('http://xxx.com/login', (data) => {
+    // 登陆成功之后向订阅者发布用户信息
+    login.trigger('loginSuccess', data)
+})
+
+
+// header模块订阅登陆成功信息
+const header = (function () {
+    login.listen('loginSuccess', data => {
+        header.setAvatar(data.avatar)
+    })
+
+    return {
+        setAvatar: (avatar) => {
+            console.log('header-avatar', avatar)
+        }
+    }
+})()
 
 
 
+// nav模块订阅登陆成功信息
+
+const nav = (function () {
+    login.listen('loginSuccess', data => {
+        nav.setAvatar(data.avatar)
+    });
+
+    return {
+        setAvatar: (avatar) => {
+            console.log('nav-avatar', avatar)
+        }
+    }
+})()
 
 
 
-
-
-
-
-
-
+/************************
+*******最终版本**********
+*************************/
 
 
 
