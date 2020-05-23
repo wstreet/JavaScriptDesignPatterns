@@ -121,49 +121,55 @@ const nav = (function () {
 
 
 /************************
-*******最终版本**********
+*******最终版本 ES6**********
 *************************/
 
+class Event {
+    constructor() {
+        this.subscribeMap = {}
+    }
+
+    on(eventName, listener) {
+        const subscribeList = this.subscribeMap[eventName] || []
+        subscribeList.push(listener)
+        this.subscribeMap[eventName] = subscribeList
+    }
+
+    emit(eventName, ...args) {
+        const subscribeList = this.subscribeMap[eventName]
+        if (!subscribeList){
+            return;
+        }
+        subscribeList.forEach(fn => {
+            fn.apply(this, args)
+        })
+        return true
+    }
+
+    remove(eventName, listener) {
+        const subscribeList = this.subscribeMap[eventName]
+        if (!subscribeList){
+            return;
+        }
+
+        if (!listener) {
+            subscribeList = []
+            return true
+        }
+        for (let index = 0; index < subscribeList.length; index++) {
+            const subscriber = subscribeList[index];
+            if (subscriber === listener) {
+                subscribeList.splice(index, 1)
+            }
+            
+        }
+    }
+}
 
 
 
 
+const customEvent = new Event()
 
-
-
-
-
-
-
-
-
-
-// class Event {
-//     _default = 'default'
-//     _slice = Array.prototype.slice
-//     _shift = Array.prototype.shift
-//     _unshift = Array.prototype._unshift
-//     namespaceCache = {}
-
-//     // 
-//     _create(namespace) {
-
-//     }
-
-//     // 添加订阅
-//     _listen() {
-
-//     }
-
-//     // 发布
-//     _trigger() {
-
-//     }
-
-//     // 删除订阅
-//     _remove() {
-
-//     }
-
-
-// }
+const loginModel = {}
+Object.assign(loginModel, customEvent)
